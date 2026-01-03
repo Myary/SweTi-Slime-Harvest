@@ -12,6 +12,12 @@ public class ModItems {
 
     public static final DeferredItem<Item>  NATURAL_SLIMORITE = ITEMS.register("natural_slimorite",
             () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item>  STONE_SLIMORITE = ITEMS.register("stone_slimorite",
+            () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item>  COAL_SLIMORITE = ITEMS.register("coal_slimorite",
+            () -> new Item(new Item.Properties()));
+
+
 
 
 

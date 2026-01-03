@@ -20,6 +20,8 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters, output) -> {
 
                         output.accept(ModItems.NATURAL_SLIMORITE.get());
+                        output.accept(ModItems.STONE_SLIMORITE.get());
+                        output.accept(ModItems.COAL_SLIMORITE.get());
 
 
                     }).build());

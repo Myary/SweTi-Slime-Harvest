@@ -3,11 +3,12 @@ package net.myarry.slimeharvest;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.myarry.slimeharvest.block.ModBlocks;
 import net.myarry.slimeharvest.entity.ModEntities;
+import net.myarry.slimeharvest.entity.slime.breeding.BreedingManager;
+import net.myarry.slimeharvest.entity.slime.coal.CoalSlimeRenderer;
+import net.myarry.slimeharvest.entity.slime.mine.MineSlimeRenderer;
 import net.myarry.slimeharvest.entity.slime.natural.NaturalSlimeRenderer;
 import net.myarry.slimeharvest.item.ModCreativeModeTabs;
 import net.myarry.slimeharvest.item.ModItems;
-import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(SlimeHarvest.MOD_ID)
@@ -51,8 +53,9 @@ public class SlimeHarvest {
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-
+    public void onServerStart(ServerStartedEvent event) {
+        // Загружаем рецепты при старте сервера
+        BreedingManager.init();
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -62,6 +65,8 @@ public class SlimeHarvest {
         static void onClientSetup(FMLClientSetupEvent event) {
 
             EntityRenderers.register(ModEntities.NATURAL_SLIME.get(), NaturalSlimeRenderer::new);
+            EntityRenderers.register(ModEntities.MINE_SLIME.get(), MineSlimeRenderer::new);
+            EntityRenderers.register(ModEntities.COAL_SLIME.get(), CoalSlimeRenderer::new);
 
         }
     }

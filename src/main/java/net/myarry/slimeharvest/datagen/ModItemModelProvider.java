@@ -14,7 +14,8 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         basicItem(ModItems.NATURAL_SLIMORITE.get());
-
+        basicItem(ModItems.STONE_SLIMORITE.get());
+        basicItem(ModItems.COAL_SLIMORITE.get());
 
     }
 }
