@@ -1,5 +1,6 @@
 package net.myarry.slimeharvest;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.myarry.slimeharvest.block.ModBlocks;
 import net.myarry.slimeharvest.entity.ModEntities;
@@ -22,10 +23,12 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import org.slf4j.Logger;
 
 @Mod(SlimeHarvest.MOD_ID)
 public class SlimeHarvest {
     public static final String MOD_ID = "slimeharvest";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public SlimeHarvest(IEventBus modEventBus, ModContainer modContainer) {
 

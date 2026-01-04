@@ -49,9 +49,7 @@ public class BreedingManager {
 
     private static void createExampleRecipes(Path file) throws Exception {
         List<BreedingRecipe> examples = Arrays.asList(
-                new BreedingRecipe("natural", "miner", "coal", 0.5f),
-                new BreedingRecipe("natural", "natural", "natural", 1.0f),
-                new BreedingRecipe("coal", "coal", "coal", 1.0f)
+                new BreedingRecipe("natural", "miner", "coal", 0.5f)
         );
 
         String json = GSON.toJson(examples);

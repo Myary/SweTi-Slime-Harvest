@@ -36,8 +36,6 @@ public class CoalSlime extends BaseSlimeEntity {
     protected void registerGoals() {
         super.registerCommonGoals();
 
-        this.goalSelector.addGoal(2, new TemptGoal(this, 3,
-                stack -> stack.is(ModItems.COAL_SLIMORITE), false));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

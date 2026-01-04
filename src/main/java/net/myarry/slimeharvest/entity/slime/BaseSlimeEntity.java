@@ -34,7 +34,8 @@ public class BaseSlimeEntity extends Animal   {
         private final BaseSlimeEntity slime;
         private BaseSlimeEntity partner;
         private int breedTimer = 0;
-        private final int BREED_DELAY = 40; // 2 секунды (40 тиков)
+        private final int BREED_DELAY = 60; // 2 секунды (40 тиков)
+        private boolean hasBred = false; // Флаг, что размножение уже произошло
 
         public SimpleSlimeBreedGoal(BaseSlimeEntity slime) {
             this.slime = slime;
@@ -43,24 +44,31 @@ public class BaseSlimeEntity extends Animal   {
 
         @Override
         public boolean canUse() {
-            // Только если влюблён и взрослый
-            return this.slime.isInLove() && !this.slime.isBaby();
+            // Только если влюблён и взрослый И ещё не размножался
+            return this.slime.isInLove() && !this.slime.isBaby() && !hasBred;
         }
 
         @Override
         public void start() {
             this.partner = null;
             this.breedTimer = 0;
+            this.hasBred = false;
         }
 
         @Override
         public void stop() {
             this.partner = null;
             this.breedTimer = 0;
+            this.hasBred = false;
         }
 
         @Override
         public void tick() {
+            // Если уже размножились - выходим
+            if (hasBred) {
+                return;
+            }
+
             // 1. Ищем партнёра если ещё нет
             if (this.partner == null || !this.partner.isInLove()) {
                 this.findPartner();
@@ -79,14 +87,12 @@ public class BaseSlimeEntity extends Animal   {
 
             if (distance > 9.0) { // Дальше 3 блоков
                 // Двигаемся к партнёру
-                this.slime.getNavigation().moveTo(this.partner, 3.0);
+                this.slime.getNavigation().moveTo(this.partner, 2.0);
                 this.breedTimer = 0; // Сбрасываем таймер если далеко
             } else {
                 // Достаточно близко - останавливаемся и ждём
                 this.slime.getNavigation().stop();
                 this.breedTimer++;
-
-
 
                 // 4. Проверяем прошло ли достаточно времени
                 if (this.breedTimer >= BREED_DELAY) {
@@ -115,17 +121,23 @@ public class BaseSlimeEntity extends Animal   {
         }
 
         private void breed() {
+            // Проверяем, что партнёр ещё влюблён и ещё не размножался
+            if (hasBred || this.partner == null || !this.partner.isInLove()) {
+                this.stop();
+                return;
+            }
+
+            // Устанавливаем флаг, что размножение началось
+            hasBred = true;
+
             ServerLevel level = (ServerLevel)this.slime.level();
 
             // Вызываем стандартный метод размножения
             AgeableMob baby = this.slime.getBreedOffspring(level, this.partner);
 
             if (baby != null) {
-                System.out.println("Детёныш создан: " +
-                        (baby instanceof BaseSlimeEntity s ? s.getSlimeType() : "неизвестно"));
-
                 // Стандартная логика Animal.spawnChildFromBreeding
-                this.slime.setAge(24000); // КД на размножение (5 минут)
+                this.slime.setAge(24000);
                 this.partner.setAge(24000);
                 this.slime.resetLove();
                 this.partner.resetLove();
@@ -139,14 +151,17 @@ public class BaseSlimeEntity extends Animal   {
                 level.addFreshEntityWithPassengers(baby);
                 level.broadcastEntityEvent(this.slime, (byte)18); // Частицы любви
 
+                // Также можно вызвать событие для партнёра для визуального эффекта
+                level.broadcastEntityEvent(this.partner, (byte)18);
             }
 
             this.stop();
+
         }
 
         @Override
         public boolean requiresUpdateEveryTick() {
-            return true; // Вызывать tick() каждый тик
+            return true;
         }
     }
 
@@ -164,11 +179,11 @@ public class BaseSlimeEntity extends Animal   {
         this.goalSelector.addGoal(2, new SimpleSlimeBreedGoal(this));
 
         // ПОНИЖЕННЫЙ ПРИОРИТЕТ для случайных прыжков:
-        this.goalSelector.addGoal(3, new SlimeRandomDirectionGoal(this));
-        this.goalSelector.addGoal(4, new SlimeKeepOnJumpingGoal(this));
+        this.goalSelector.addGoal(4, new SlimeRandomDirectionGoal(this));
+        this.goalSelector.addGoal(5, new SlimeKeepOnJumpingGoal(this));
 
-        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
 
     @Override

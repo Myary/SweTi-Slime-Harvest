@@ -36,8 +36,7 @@ public class NaturalSlime extends BaseSlimeEntity {
         super.registerCommonGoals();
 
 
-        //this.goalSelector.addGoal(2, new TemptGoal(this, 3,
-         //       stack -> stack.is(ModItems.NATURAL_SLIMORITE), false));
+
 
     }
 
